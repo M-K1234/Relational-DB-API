@@ -1,0 +1,25 @@
+{
+  "name": "relational-db-api",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "body-parser": "^1.20.3",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.0",
+    "knex": "^3.1.0",
+    "mongoose": "^8.10.1",
+    "multer": "^1.4.5-lts.1",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.3",
+    "neo4j-driver": "^5.28.1",
+    "nodemon": "^3.1.7",
+    "sequelize": "^6.37.4",
+    "uuid": "^11.0.5"
+  }
+}
