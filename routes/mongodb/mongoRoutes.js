@@ -9,16 +9,16 @@ const router = express.Router();
 
 router.get('/mongo/trainer', async (req, res) => {
     await mongo.connectMongo();
-    const trainer = await mongo.getTrainerById(trainerModel, req.body.trainer_id);
-    const character = await mongo.getCharacterById(characterModel, req.body.character_character_id);
+    const trainer = await mongo.getTrainerById(TrainerModel, req.body.trainer_id);
+    const character = await mongo.getCharacterById(CharacterModel, req.body.character_character_id);
     await mongo.closeMongoConnection();
     
     res.json({character, trainer});
 });
 router.get('/mongo/trainers', async (req, res) => {
     await mongo.connectMongo();
-    const characters = await mongo.getCharacters(characterModel);
-    const trainers = await mongo.getTrainers(trainerModel);
+    const characters = await mongo.getCharacters(CharacterModel);
+    const trainers = await mongo.getTrainers(TrainerModel);
     await mongo.closeMongoConnection();
     res.json({ characters, trainers });
 })

@@ -18,7 +18,7 @@
     "mysql": "^2.18.1",
     "mysql2": "^3.11.3",
     "neo4j-driver": "^5.28.1",
-    "nodemon": "^3.1.7",
+    "nodemon": "^3.1.9",
     "sequelize": "^6.37.4",
     "uuid": "^11.0.5"
   }
