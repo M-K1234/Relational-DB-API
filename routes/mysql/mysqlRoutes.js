@@ -7,7 +7,7 @@ const characterModel = require('./../../databases/mysql/models/character')
 
 const router = express.Router()
 
-router.get('/mysql/trainer/all', async (req, res) => {
+router.get('/mysql/trainers', async (req, res) => {
     const connection =  await mysqlDatabase.connect()
     const trainer = trainerModel.buildTrainer(connection);
     const records = await mysqlDatabase.getTrainers(trainer)
