@@ -52,7 +52,7 @@ const deleteDog = async (id) => {
 
 const connectMongo = async () => {
     try {
-        await mongoose.connect('mongodb://127.0.0.1:27017/dogeverse');
+        await mongoose.connect(process.env.MONGO_URL);
         console.log('MongoDB connected successfully');
     } catch (err) {
         console.error('Failed to connect to MongoDB', err);

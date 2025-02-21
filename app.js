@@ -4,7 +4,7 @@ const app = express();
 const multer = require('multer');
 const mysqlRouter = require('./routes/mysql/mysqlRoutes')
 const mongoRouter = require('./routes/mongodb/mongoRoutes');
-const neo4j = require('./routes/neo4j/neoTest');
+const neo4j = require('./routes/neo4j/neo4jRoutes');
 
 app.use(express.static('static'));
 app.use(bodyParser.json());
