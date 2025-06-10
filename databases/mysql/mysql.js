@@ -1,10 +1,24 @@
 const env = require('dotenv');
 env.config();
 const { v4: uuidv4 } = require('uuid');
-const { Sequelize } = require('sequelize')
+const { Sequelize } = require('sequelize');
+const { get } = require('mongoose');
+
 const password = process.env.MYSQL_PASSWORD;
 const username = process.env.MYSQL_USERNAME;
 const database = process.env.MYSQL_DATABASE;
+const host_read = process.env.MYSQL_READ_HOST;
+const port_read = process.env.MYSQL_READ_PORT;
+const username_read = process.env.MYSQL_READ_USERNAME;
+const password_read = process.env.MYSQL_READ_PASSWORD;
+const database_read = process.env.MYSQL_READ_DATABASE;
+const host_insert = process.env.MYSQL_INSERT_HOST;
+const port_insert = process.env.MYSQL_INSERT_PORT;
+const username_insert = process.env.MYSQL_INSERT_USERNAME;
+const password_insert = process.env.MYSQL_INSERT_PASSWORD;
+const database_insert = process.env.MYSQL_INSERT_DATABASE;
+
+
 const connect = async () => {
   try {
     const sequelize = new Sequelize(database, username, password, {
@@ -18,7 +32,38 @@ const connect = async () => {
       console.error('Unable to connect to the database: ', error);
       return error;
     }
-}
+};
+
+const connect_insert_only = async () => {
+  try {
+    const sequelize = new Sequelize(database, username_insert, password_insert, {
+     host: 'localhost',
+      dialect: 'mysql'
+    });
+      await sequelize.authenticate();
+      console.log('Connection has been established successfully.');
+      return sequelize;
+    } catch (error) {
+      console.error('Unable to connect to the database: ', error);
+      return error;
+    }
+};
+
+const connect_read_only = async () => {
+  try {
+    const sequelize = new Sequelize(database, username_read, password_read, {
+      host: 'localhost',
+      dialect: 'mysql'
+    });
+      await sequelize.authenticate();
+      console.log('Connection has been established successfully.');
+      return sequelize;
+    } catch (error) {
+      console.error('Unable to connect to the database: ', error);
+      return error;
+    }
+};
+
 const closeConnection = (connection) => {
   connection.close()
   console.log('Connection closed')
@@ -94,14 +139,43 @@ const deleteTrainer = async (Trainer, trainer_id, Character, character_id) => {
   return deletedEntities;
 }
 
+const getAchievements = async (Achievement) => {
+  const achievements = await Achievement.findAll();
+  return achievements;
+}
+
+const insertAchievement = async (Achievement, achievementData) => {
+  achievementData.achievement_id = uuidv4();
+  const createdAchievement = await Achievement.create(achievementData);
+  return createdAchievement;
+}
+
+// simplified for sake of demo 
+const insertAchievementWithProcedure = async (sequelize) => {
+ 
+  const result = await sequelize.query(`CALL dogeverse.sp_insert_achievement
+    ('Executed skills 500 times','Pack Leader', 500);`,
+    {
+      type: Sequelize.QueryTypes.RAW
+    }
+  );
+
+  return result;
+}
+
 module.exports = {
   createTrainer,
   updateTrainer,
   deleteTrainer,
   connect,
+  connect_read_only,
+  connect_insert_only,
   closeConnection,
   getTrainers,
-  getTrainerByName
+  getTrainerByName,
+  insertAchievementWithProcedure,
+  getAchievements,
+  insertAchievement
 }
 
   

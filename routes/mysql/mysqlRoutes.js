@@ -1,9 +1,10 @@
 const env = require('dotenv');
 env.config();
-const express = require('express')
-const mysqlDatabase = require('../../databases/mysql/mysql')
-const trainerModel = require('./../../databases/mysql/models/trainer')
-const characterModel = require('./../../databases/mysql/models/character') 
+const express = require('express');
+const mysqlDatabase = require('../../databases/mysql/mysql');
+const trainerModel = require('./../../databases/mysql/models/trainer');
+const characterModel = require('./../../databases/mysql/models/character') ;
+const achievementModel = require('./../../databases/mysql/models/achievement');
 
 const router = express.Router()
 
@@ -34,6 +35,10 @@ router.post('/mysql/trainer', async (req, res) => {
     res.json(newTrainer);
 });
 
+// trigger 
+
+// stored procedure
+
 router.put('/mysql/trainer', async (req, res) => {
     const connection = await mysqlDatabase.connect();
     const trainer = trainerModel.buildTrainer(connection);
@@ -63,6 +68,23 @@ router.delete('/mysql/trainer', async (req, res) => {
 
     mysqlDatabase.closeConnection(connection);
     res.json(deletedTrainer);
+});
+
+router.get('/mysql/achievements/read', async (req, res) => {
+    const connection_read = await mysqlDatabase.connect_read_only();
+    const achievement = achievementModel.buildAchievement(connection_read);
+    const achievementData = await mysqlDatabase.getAchievements(achievement);
+    mysqlDatabase.closeConnection(connection_read);
+    res.json(achievementData);
+});
+
+router.post('/mysql/achievements/insert', async (req, res) => {
+    const formData = req.body;
+    const connection_insert = await mysqlDatabase.connect_insert_only();
+    const achievement = achievementModel.buildAchievement(connection_insert);
+    const newAchievement = await mysqlDatabase.insertAchievement(achievement, formData);
+    mysqlDatabase.closeConnection(connection_insert);
+    res.json(newAchievement);
 });
 
 module.exports = router;
