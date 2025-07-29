@@ -2,15 +2,15 @@ const env = require('dotenv');
 env.config();
 const express = require('express');
 const mysqlDatabase = require('../../databases/mysql/mysql');
-const trainerModel = require('./../../databases/mysql/models/trainer');
-const characterModel = require('./../../databases/mysql/models/character') ;
-const achievementModel = require('./../../databases/mysql/models/achievement');
+const Trainer = require('./../../databases/mysql/models/trainer');
+const Achievement = require('./../../databases/mysql/models/achievement');
+const Dog = require('./../../databases/mysql/models/dog');
+const router = express.Router();
 
-const router = express.Router()
-
+// routes
 router.get('/mysql/trainers', async (req, res) => {
     const connection =  await mysqlDatabase.connect()
-    const trainer = trainerModel.buildTrainer(connection);
+    const trainer = Trainer.buildTrainer(connection);
     const records = await mysqlDatabase.getTrainers(trainer)
     mysqlDatabase.closeConnection(connection)
     res.json(records);
@@ -18,31 +18,25 @@ router.get('/mysql/trainers', async (req, res) => {
 
 router.get('/mysql/trainer/:name', async (req, res) => {
     const connection =  await mysqlDatabase.connect()
-    const trainer = trainerModel.buildTrainer(connection);
-    const character = characterModel.buildCharacter(connection);
-    const records = await mysqlDatabase.getTrainerByName(trainer, character ,req.params.name)
+    const trainer = Trainer.buildTrainer(connection);
+    const records = await mysqlDatabase.getTrainerByName(trainer, req.params.name)
     mysqlDatabase.closeConnection(connection)
     res.json(records);
 })
 
 router.post('/mysql/trainer', async (req, res) => {
-    const formData = req.body;
+
     const connection = await mysqlDatabase.connect();
-    const trainer = trainerModel.buildTrainer(connection);
-    const character = characterModel.buildCharacter(connection);
-    const newTrainer = await mysqlDatabase.createTrainer(trainer, character, formData);
+    const newTrainer = await mysqlDatabase.createTrainer(connection, req.body);
     mysqlDatabase.closeConnection(connection);
+    
     res.json(newTrainer);
 });
-
-// trigger 
-
-// stored procedure
 
 router.put('/mysql/trainer', async (req, res) => {
     const connection = await mysqlDatabase.connect();
     const trainer = trainerModel.buildTrainer(connection);
-    const character = characterModel.buildCharacter(connection);
+    const dog = dogModel.buildDog(connection);
     const updatedTrainer = await mysqlDatabase.updateTrainer(
         trainer, 
         req.body[1].trainer_id,
@@ -86,5 +80,7 @@ router.post('/mysql/achievements/insert', async (req, res) => {
     mysqlDatabase.closeConnection(connection_insert);
     res.json(newAchievement);
 });
+
+// routes end ----------
 
 module.exports = router;

@@ -1,31 +1,41 @@
 const { DataTypes } = require('sequelize');
 
-function buildDog(connection){
-    const Dog = connection.define(
-        'Dog',
-        {
-          dog_id: {
-            type: DataTypes.UUID
-          },
-          trainer_trainer_id: {
-            type: DataTypes.UUID
-          },
-          pet_dog_stat_id: {
-            type: DataTypes.UUID
-          },
-          breed: {
-            type: DataTypes.STRING
-          },
-          affinity: {
-            type: DataTypes.INTEGER
-          }
-        },
-        {
-          timestamps: false
-        }
-      );
+function buildDog(sequelize)
+{
+   const Dog = sequelize.define('Dog', {
+  dog_id: {
+    type: DataTypes.CHAR(36),
+    primaryKey: true
+  },
+  trainer_trainer_id: {
+    type: DataTypes.CHAR(36),
+    primaryKey: true
+  },
+  breed: {
+    type: DataTypes.STRING(255),
+    allowNull: false
+  },
+  trainer_affinity: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  name: DataTypes.STRING(45),
+  level: DataTypes.INTEGER,
+  strength: DataTypes.INTEGER,
+  dexterity: DataTypes.INTEGER,
+  intelligence: DataTypes.INTEGER
+});
 
-      return Dog;
+Dog.buildDog(connection).belongsTo(Trainer, {
+  foreignKey: 'trainer_trainer_id'
+});
+Dog.buildDog(connection).hasMany(SkillStat, { foreignKey: 'dog_fk' });
+DogSkill.hasMany(SkillStat, { foreignKey: 'skill_fk' });
+
+      
+return Dog;
+
 }
 
   module.exports = {

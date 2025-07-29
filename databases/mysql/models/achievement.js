@@ -1,28 +1,26 @@
 const { DataTypes } = require('sequelize');
 
-function buildAchievement(connection){
+function buildAchievement(sequelize){
 
-    const Achievement = connection.define(
-        'Achievement',
-        {
-          achievement_id: {
-            type: DataTypes.UUID,
-            primaryKey: true
-          },
-          description: {
-            type: DataTypes.STRING
-          },
-          award_title: {
-            type: DataTypes.STRING
-          },
-          trigger_points: {
-            type: DataTypes.INTEGER
-          }
-        },
-        {
-          timestamps: false
-        }
-      );
+    const Achievement = sequelize.define('Achievement', {
+  achievement_id: {
+    type: DataTypes.CHAR(36),
+    primaryKey: true
+  },
+  description: {
+    type: DataTypes.STRING(250),
+    allowNull: false
+  },
+  award_title: {
+    type: DataTypes.STRING(45),
+    allowNull: false
+  },
+  trigger_points: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  }
+});
+Achievement.hasMany(AwardedAchievement, { foreignKey: 'achievement_fk' });
 
       return Achievement;
 }

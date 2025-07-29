@@ -94,18 +94,35 @@ const getTrainerByName = async (Trainer, Character, name) => {
   return trainer;
 }
 
-const createTrainer = async (trainer, character, characterData) => {
+const createTrainer = async (sequelize, data) => {
 
-  characterData[0].character_id = uuidv4();
-  console.log(characterData[1]);
+    const result =  await sequelize.query(
+      `CALL create_trainer_with_dog_and_skills(
+        :name, :level, :strength, :dexterity, :intelligence,
+        :breed, :trainer_affinity, :dog_name,
+        :dog_level, :dog_strength, :dog_dexterity, :dog_intelligence,
+        :score
+      )`,
+      {
+        replacements: {
+          name: data.name,
+          level: data.level,
+          strength: data.strength,
+          dexterity: data.dexterity,
+          intelligence: data.intelligence,
+          breed: data.breed,
+          trainer_affinity: data.trainer_affinity,
+          dog_name: data.dog_name,
+          dog_level: data.dog_level,
+          dog_strength: data.dog_strength,
+          dog_dexterity: data.dog_dexterity,
+          dog_intelligence: data.dog_intelligence,
+          score: data.score
+        }
+      }
+  );
 
-  await character.create(characterData[0]);
-
-  characterData[1].trainer_id = uuidv4();
-  characterData[1].character_character_id = characterData[0].character_id;
-  const createdTrainer = await trainer.create(characterData[1]);  
-
-  return createdTrainer;
+  return result;
 }
 
 

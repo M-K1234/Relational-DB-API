@@ -1,31 +1,34 @@
 const { DataTypes } = require('sequelize');
 
- function buildTrainer(connection)
+ function buildTrainer(sequelize)
  {
-    const Trainer = connection.define(
-        'Trainer',
-        {
-          trainer_id: {
-            type: DataTypes.UUID,
-            primaryKey: true
-          },
-          character_character_id: {
-            type: DataTypes.UUID
-          },
-          pet_affinity: {
-            type: DataTypes.INTEGER
-          }
-        },
-        {
-          timestamps: false
-        }
-      );
+    const Trainer = sequelize.define('Trainer', {
+  trainer_id: {
+    type: DataTypes.CHAR(36),
+    primaryKey: true
+  },
+  name: {
+    type: DataTypes.STRING(45),
+    allowNull: false
+  },
+  level: DataTypes.INTEGER,
+  strength: DataTypes.INTEGER,
+  dexterity: DataTypes.INTEGER,
+  Intelligence: DataTypes.INTEGER
+});
 
-      return Trainer;
- }
- 
- 
+Trainer.hasMany(Dog, {
+  foreignKey: 'trainer_trainer_id'
+});
+Trainer.hasMany(Highscore, {
+  foreignKey: 'trainers_trainer_id'
+});
+Trainer.hasMany(AwardedAchievement, { foreignKey: 'trainer_fk' });
 
-  module.exports = {
-    buildTrainer
-  };
+      
+return Trainer;
+}
+  
+module.exports = {
+  buildTrainer
+};

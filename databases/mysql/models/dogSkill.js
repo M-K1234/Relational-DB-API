@@ -1,29 +1,34 @@
   const { DataTypes } = require('sequelize');
-  function buildDogSkill(connection){
-    const DogSkill = connection.define(
-        'Dog_Skill',
-        {
-          dog_skill_id: {
-            type: DataTypes.UUID,
-            primaryKey: true
-          },
-          damage: {
-            type: DataTypes.INTEGER
-          },
-          description: {
-            type: DataTypes.STRING
-          },
-          name: {
-            type: DataTypes.STRING
-          },
-          attack_type: {
-            type: DataTypes.STRING
-          }
-        },
-        {
-          timestamps: false
-        }
-      );
+  function buildDogSkill(sequelize){
+    
+    const DogSkill = sequelize.define('DogSkill', {
+  dog_skill_id: {
+    type: DataTypes.CHAR(36),
+    primaryKey: true
+  },
+  damage: {
+    type: DataTypes.INTEGER,
+    allowNull: false
+  },
+  description: {
+    type: DataTypes.STRING(45),
+    allowNull: false
+  },
+  name: {
+    type: DataTypes.STRING(45),
+    allowNull: false
+  },
+  attack_type: {
+    type: DataTypes.STRING(45),
+    allowNull: false
+  },
+  lvl_unlock: DataTypes.INTEGER,
+  starting_skill: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false
+  }
+});
+
 
       return DogSkill;
   }
