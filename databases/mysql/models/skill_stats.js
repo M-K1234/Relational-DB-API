@@ -1,16 +1,28 @@
 const { DataTypes } = require('sequelize');
 
-function buildSkillStats(sequelize){
-    
-  const SkillStat = sequelize.define('SkillStat', {
-  skill_executions: DataTypes.STRING(45)
-});
-SkillStat.belongsTo(Dog, { foreignKey: 'dog_fk' });
-SkillStat.belongsTo(DogSkill, { foreignKey: 'skill_fk' });
+function buildSkillStats(sequelize) {
+  const SkillStat = sequelize.define('Skill_Stat', {
+    skill_executions: {
+      type: DataTypes.STRING(45),
+      allowNull: true // or false if required
+    }
+  });
 
-      return SkillStat;
-  }
+  // Associate later, after all models are defined
+  SkillStat.associate = (models) => {
+    // If SkillStat is a join table for Dog <-> DogSkill:
+    SkillStat.belongsTo(models.Dog, {
+      foreignKey: 'dog_fk'
+    });
 
-  module.exports = {
-    buildSkillStats 
+    SkillStat.belongsTo(models.DogSkill, {
+      foreignKey: 'skill_fk'
+    });
   };
+
+  return SkillStat;
+}
+
+module.exports = {
+  buildSkillStats
+};

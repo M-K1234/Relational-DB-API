@@ -1,25 +1,32 @@
 const { DataTypes } = require('sequelize');
 
-function buildHighscore(sequelize)
-{
-    const Highscore = sequelize.define('Highscore', {
-  highscore_id: {
-    type: DataTypes.CHAR(36),
-    primaryKey: true
-  },
-  score: DataTypes.INTEGER
-}, {
-  timestamps: false
-});
+function buildHighscore(sequelize) {
+  const Highscore = sequelize.define('Highscore', {
+    highscore_id: {
+      type: DataTypes.CHAR(36),
+      primaryKey: true
+    },
+    score: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
+  }, {
+    timestamps: false
+  });
 
-Highscore.belongsTo(Trainer, {
-  foreignKey: 'trainers_trainer_id',
-  primaryKey: true
-});
+  // Associate later, after all models are defined
+  Highscore.associate = (models) => {
+    Highscore.belongsTo(models.Trainer, {
+      foreignKey: {
+        name: 'trainers_trainer_id',
+        allowNull: false
+      }
+    });
+  };
 
-    return Highscore;
+  return Highscore;
 }
 
-  module.exports = {
-    buildHighscore
-  };
+module.exports = {
+  buildHighscore
+};

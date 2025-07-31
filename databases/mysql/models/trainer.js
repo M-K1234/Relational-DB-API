@@ -1,34 +1,40 @@
 const { DataTypes } = require('sequelize');
 
- function buildTrainer(sequelize)
- {
-    const Trainer = sequelize.define('Trainer', {
-  trainer_id: {
-    type: DataTypes.CHAR(36),
-    primaryKey: true
+function buildTrainer(sequelize) {
+  const Trainer = sequelize.define('Trainer', {
+    trainer_id: {
+      type: DataTypes.CHAR(36),
+      primaryKey: true
+    },
+    name: {
+      type: DataTypes.STRING(45),
+      allowNull: false
+    },
+    level: DataTypes.INTEGER,
+    strength: DataTypes.INTEGER,
+    dexterity: DataTypes.INTEGER,
+    Intelligence: DataTypes.INTEGER
   },
-  name: {
-    type: DataTypes.STRING(45),
-    allowNull: false
-  },
-  level: DataTypes.INTEGER,
-  strength: DataTypes.INTEGER,
-  dexterity: DataTypes.INTEGER,
-  Intelligence: DataTypes.INTEGER
+{
+  timestamps: false
 });
 
-Trainer.hasMany(Dog, {
-  foreignKey: 'trainer_trainer_id'
-});
-Trainer.hasMany(Highscore, {
-  foreignKey: 'trainers_trainer_id'
-});
-Trainer.hasMany(AwardedAchievement, { foreignKey: 'trainer_fk' });
+  // Defer associations until later
+  Trainer.associate = (models) => {
+    Trainer.hasOne(models.Dog, {
+      foreignKey: 'trainer_trainer_id'
+    });
 
-      
-return Trainer;
+    Trainer.hasOne(models.Highscore, {
+      foreignKey: 'trainers_trainer_id'
+    });
+
+    Trainer.belongsToMany(models.Achievement, {
+      through: models.AwardedAchievement
+    });
+  };
+
+  return Trainer;
 }
-  
-module.exports = {
-  buildTrainer
-};
+
+module.exports = { buildTrainer };
